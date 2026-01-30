@@ -43,11 +43,15 @@ obj1.Display()
 obj1.Deposit(100)
 obj1.Withdraw(200)
 obj1.Withdraw(20000)
+print("Interest Amount is : ",obj1.CalculateInterest())
+
 print("="*80)
+
 obj2 = BankAccount("Jason",20000)
 obj2.Display()
 obj2.Deposit(1000)
 obj2.Withdraw(2000)
 obj2.Withdraw(20000)
+print("Interest Amount is : ",obj1.CalculateInterest())
 
 
