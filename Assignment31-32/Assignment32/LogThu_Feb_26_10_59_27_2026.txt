@@ -1,0 +1,12 @@
+------------------------------------------------------- Script to  Delete Duplicate files in Directory --------------------
+Below are the duplicates found in the file
+-----------------------------------
+['Demo/pqr1 copy.txt', 'Demo/pqr1.pdf']
+['Demo/abc.pdf', 'Demo/abc copy 2.pdf', 'Demo/abc copy.pdf']
+-----------------------------------
+--------- Below duplicate files were identified and removed ---------
+['Demo/pqr1.pdf', 'Demo/abc copy 2.pdf', 'Demo/abc copy.pdf']
+-----------------------------------
+Time taken to execute the script : 0.0018150806427001953
+-------------- End of Script --------------
+-------------- Thank you for using our Script --------------
