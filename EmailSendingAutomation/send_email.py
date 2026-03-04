@@ -69,7 +69,8 @@ def main():
     sender_email = "studentajinkya@gmail.com"
 
     #App password generated from Google Account
-    app_password = "<App password (not normal password)>"
+    #myaccount.google.com/apppasswords, navigate here to generate the password.
+    app_password = "fxgo ogum yalb gvfy"
 
     #Your second email for testing
     receiver_email = "ajinkyarasal26@gmail.com"
