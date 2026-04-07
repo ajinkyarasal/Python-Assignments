@@ -1,0 +1,142 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import (DecisionTreeClassifier,plot_tree)
+import matplotlib.pyplot as plt 
+from sklearn.metrics import (
+    accuracy_score,
+    confusion_matrix
+)
+
+def main():
+
+    df = pd.read_csv("Assignment38-40/student_performance_ml.csv")
+    X = df.drop(columns= ["FinalResult"])
+    Y = df["FinalResult"]
+
+    X_train,X_test,Y_train,Y_test = train_test_split(X,Y,test_size=0.2,random_state=42)
+
+    model = DecisionTreeClassifier()
+    model.fit(X_train,Y_train)
+
+    for name, importance in zip (X_train.columns,model.feature_importances_):
+        print(name, importance)
+
+    print("Study hours Contribute the most in predicting final result")
+    print("All the other features contribute nothing. The value is zero")
+
+    print("Train the data again by removing the SleepHours from dataset")
+    
+    X_new = X.drop(columns= ["SleepHours"])
+    Y_new = df["FinalResult"]
+
+    X_train,X_test,Y_train,Y_test = train_test_split(X_new,Y_new)
+    print(X_train.head())
+    model.fit(X_train,Y_train)
+    Y_pred = model.predict(X_test)
+    print("New accuracy score without the sleepHours column : ",accuracy_score(Y_test,Y_pred))
+
+    print("Removing theis feature does not affect performance.")
+
+    print("Train the model with only StudyHours and Attendance")
+    X = df[["StudyHours","Attendance"]]
+    Y = df["FinalResult"]
+
+    X_train,X_test,Y_train,Y_test = train_test_split(X,Y,test_size=0.2,random_state=42)
+    model = DecisionTreeClassifier()
+    model.fit(X_train,Y_train)
+    Y_pred = model.predict(X_test)
+    print("New accuracy of the model : ",accuracy_score(Y_test,Y_pred) * 100)
+    print("The model accuracy is still the same. It is unchanged from 100%.")
+
+    print("Create new DataFrame with detials of 5 new students and predict based on already trained model.")
+    new_student_data = {
+        "StudyHours" :[4,5,7,18,45],
+        "Attendance" : [5,4,2,39,70]
+    }
+    X_train_ext = pd.DataFrame(new_student_data)
+    Y_pre_ext = model.predict(X_train_ext)
+    print(Y_pre_ext)
+
+    print("Without accuracy_score , manually calculate accuracy:")
+    # accuracy_score = (TP + TN)/ Total samples
+    print("Accuracy using inbuilt function : ",accuracy_score(Y_test,Y_pred)*100)
+    cm = confusion_matrix(Y_test,Y_pred)
+    print(cm) #[[5 0][0 1]]
+    TP = 5
+    TN = 1
+    Total_samples = 6
+    accuracy_score_X = ((TP+TN)/Total_samples) * 100
+    print("Manual accuracy score : ",accuracy_score_X)
+
+    print("Identify students where Y_test != Y_pred")
+    #todo
+
+    print("Train model using below parameters:")
+    model_new_1 = DecisionTreeClassifier(random_state=0)
+    model_new_1.fit(X_train,Y_train)
+    print("Accuracy for random_state =0 is : ",accuracy_score(Y_test,model_new_1.predict(X_test)))
+
+    model_new_2 = DecisionTreeClassifier(random_state=10)
+    model_new_2.fit(X_train,Y_train)
+    print("Accuracy for random_state =10 is : ",accuracy_score(Y_test,model_new_2.predict(X_test)))
+
+    model_new_3 = DecisionTreeClassifier(random_state=42)
+    model_new_3.fit(X_train,Y_train)
+    print("Accuracy for random_state =0 is : ",accuracy_score(Y_test,model_new_3.predict(X_test)))
+
+    print("The accuracy score for all the random state values is the same as 100%.")
+
+    features = X.columns.to_list()
+    labels = Y.to_list()
+    print(type(features))
+    print(type(labels))
+    print(model.classes_)
+    print("Decision Tree Visualisation")
+    plt.figure(figsize=(12,8))
+    plot_tree(model,filled=True,feature_names=features,class_names=["Fail","Pass"])
+
+    print("""
+        Somtimes it is Attendance and sometime it is StudyHours.Decision Tree
+          root node feature is chosen based on the split that gives the best 
+          impurity reduction.
+          root feature changes every time you run the code,
+           it usually happens because of randomness in the training process.
+          """)
+
+    plt.title("Marvellous Decision Tree")
+    #plt.show()
+
+    print("Create New column in data and check the accuracy\n")
+    df["PerformanceIndex"] = df["StudyHours"] * 2 + df["Attendance"]
+    
+    X = df.drop(columns=["FinalResult"])
+    Y = df["FinalResult"]
+
+    X_train,X_test,Y_train,Y_test = train_test_split(X,Y,test_size=0.2,random_state=42)
+    model.fit(X_test,Y_test)
+    Y_pred = model.predict(X_test)
+    print("Accuracy Score after adding PerformanceIndex : ",accuracy_score(Y_test,Y_pred))
+
+    print("""
+        Before and after accuracy is same as 100%
+          """)
+    
+    print("Train model with max_depth as None\n")
+
+    model = DecisionTreeClassifier(max_depth=None, random_state=42)
+    model.fit(X_train,Y_train)
+    Y_pred_train = model.predict(X_train)
+
+    print("Calculate training accuracy : ",accuracy_score(Y_train,Y_pred_train))
+    
+    Y_pred_test = model.predict(X_test)
+    print("Calculate testing accuracy : ",accuracy_score(Y_test,Y_pred_test))
+
+    print("Both the accuracy is 100%.")
+
+
+
+    
+
+if __name__ == "__main__":
+    main()
